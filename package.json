@@ -1,0 +1,19 @@
+{
+  "name": "pinata-backend",
+  "version": "1.0.0",
+  "description": "Service written using node.js",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/thecoins/pinata-backend.git"
+  },
+  "author": "xchao0213@gmail.com",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/thecoins/pinata-backend/issues"
+  },
+  "homepage": "https://github.com/thecoins/pinata-backend#readme"
+}
