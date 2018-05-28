@@ -15,5 +15,14 @@
   "bugs": {
     "url": "https://github.com/thecoins/pinata-backend/issues"
   },
-  "homepage": "https://github.com/thecoins/pinata-backend#readme"
+  "homepage": "https://github.com/thecoins/pinata-backend#readme",
+  "devDependencies": {
+    "body-parser": "^1.18.3",
+    "dotenv": "^5.0.1",
+    "express": "^4.16.3",
+    "express-winston": "^2.5.1",
+    "morgan": "^1.9.0",
+    "mysql": "^2.15.0",
+    "winston": "^2.4.2"
+  }
 }
