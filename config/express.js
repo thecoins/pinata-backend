@@ -1,5 +1,6 @@
 const express = require('express');
 const bodyParser = require('body-parser');
+const cors = require('cors');
 const logger = require('morgan');
 const expressWinston = require('express-winston');
 const winstonInstance = require('./winston');
@@ -14,6 +15,8 @@ if (config.env === 'development') {
 
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({extended:true}));
+
+app.use(cors());
 
 if (config.env === 'development') {
     expressWinston.requestWhitelist.push('body');

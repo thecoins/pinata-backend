@@ -18,6 +18,7 @@
   "homepage": "https://github.com/thecoins/pinata-backend#readme",
   "devDependencies": {
     "body-parser": "^1.18.3",
+    "cors": "^2.8.4",
     "dotenv": "^5.0.1",
     "express": "^4.16.3",
     "express-winston": "^2.5.1",
