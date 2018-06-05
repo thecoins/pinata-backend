@@ -1,5 +1,6 @@
 const express = require('express');
 const bodyParser = require('body-parser');
+const helmet = require('helmet');
 const cors = require('cors');
 const logger = require('morgan');
 const expressWinston = require('express-winston');
@@ -16,6 +17,7 @@ if (config.env === 'development') {
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({extended:true}));
 
+app.use(helmet());
 app.use(cors());
 
 if (config.env === 'development') {
