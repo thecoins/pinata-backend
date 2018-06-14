@@ -1,8 +1,19 @@
 const db = require('../../config/mysql');
 
-function queryList(start, count) {
+function queryList(start, size) {
     return new Promise((resolve, reject) => {
-        db.query('select * from exchangeinfo where alive=True order by `rank` limit ' + start + ',' + count, function (err, results, fields) {
+        db.query('select * from exchangeinfo where alive=True order by `rank` limit ' + start + ',' + size, function (err, results, fields) {
+            if (err)
+                return reject(err);
+            resolve(results);
+        })
+    })
+
+}
+
+function queryCount() {
+    return new Promise((resolve, reject) => {
+        db.query('select count(*) from exchangeinfo where alive=True', function (err, results, fields) {
             if (err)
                 return reject(err);
             resolve(results);
@@ -20,4 +31,4 @@ function queryVolume(name, limit) {
     })
 
 }
-module.exports = { queryList, queryVolume };
+module.exports = { queryList, queryCount, queryVolume };

@@ -1,6 +1,7 @@
 const util = require('../util');
 const db = require('../../config/mysql');
 const exchangeDb = require('./exchange.db');
+const status = require('http-status');
 
 /**
  * @api {get} /api/exchange/basic/ Request exchange basic info
@@ -25,21 +26,27 @@ function basic(req, res, next) {
  * @apiName GetExchangeList
  * @apiGroup exchange
  * @apiParam {number} res.query.start Start of list
- * @apiParam {number} res.query.count Count of exchanges
+ * @apiParam {number} res.query.size PageSize of list
  * @apiParam {number} res.query.limit Limit of sql query volume
  * @apiSuccess {json} Array of Exchanges info
  */
 function list(req, res, next) {
     let start = req.query.start;
-    let count = req.query.count;
+    let size = req.query.size;
     let limit = req.query.limit;
-    exchangeDb.queryList(start, count).then(results => {
+    let data = {};
+    exchangeDb.queryList(start, size).then(results => {
         return Promise.all(results.map(exchange => {
             return bundleVolume(exchange, limit)
         }))
         
-    }).then(all => {
-        res.json(all)
+    }).then(list => {
+        data.data = list;
+        return exchangeDb.queryCount()
+    }).then(count => {
+        data.total = count[0]['count(*)'];
+        data.code = status.OK;
+        res.json(data);
     }).catch(err => {
         throw err;
     });
