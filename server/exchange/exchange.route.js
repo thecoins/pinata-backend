@@ -3,6 +3,9 @@ const exchangeCtrl = require('./exchange.controller');
 
 const router = express.Router();
 
+router.route('/basic/')
+    .get(exchangeCtrl.basic)
+
 router.route('/')
     .get(exchangeCtrl.list)
 

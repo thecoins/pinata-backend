@@ -3,7 +3,25 @@ const db = require('../../config/mysql');
 const exchangeDb = require('./exchange.db');
 
 /**
- * @api {get} /api/exchange/ Request exchange list
+ * @api {get} /api/exchange/basic/ Request exchange basic info
+ * @apiName GetExchangeList
+ * @apiGroup exchange
+ * @apiParam {number} res.query.start Start of list
+ * @apiParam {number} res.query.count Count of exchanges
+ * @apiSuccess {json} Array of Exchanges info
+ */
+function basic(req, res, next) {
+    let start = req.query.start;
+    let count = req.query.count;
+    exchangeDb.queryList(start, count).then(results => {        
+        res.json(results)
+    }).catch(err => {
+        throw err;
+    });
+}
+
+/**
+ * @api {get} /api/exchange/ Request exchange info whth trend
  * @apiName GetExchangeList
  * @apiGroup exchange
  * @apiParam {number} res.query.start Start of list
@@ -66,4 +84,4 @@ function get(req, res) {
     return res.json(req.results);
 }
 
-module.exports = { list, load, get };
+module.exports = { basic, list, load, get };
