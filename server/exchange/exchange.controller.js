@@ -34,7 +34,7 @@ function list(req, res, next) {
  */
 function bundleVolume(exchange,limit) {
     return new Promise((resolve, reject) => {
-        exchangeDb.queryVolume(exchange.name, limit).then(res => {
+        exchangeDb.queryVolume(exchange.nick, limit).then(res => {
             let volume = util.convert(res);
             exchange.volume = volume;
             resolve(exchange);
