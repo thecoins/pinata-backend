@@ -35,14 +35,9 @@ function list(req, res, next) {
     let size = req.query.size;
     let limit = req.query.limit;
     let data = {};
-    exchangeDb.queryList(start, size).then(results => {
-        return Promise.all(results.map(exchange => {
-            return bundleVolume(exchange, limit)
-        }))
-        
-    }).then(list => {
-        data.data = list;
-        return exchangeDb.queryCount()
+    exchangeDb.queryList(start,size).then(resulsts => {
+      data.data = resulsts;
+      return exchangeDb.queryCount()
     }).then(count => {
         data.total = count[0]['count(*)'];
         data.code = status.OK;
@@ -50,6 +45,21 @@ function list(req, res, next) {
     }).catch(err => {
         throw err;
     });
+    // exchangeDb.queryList(start, size).then(results => {
+    //     return Promise.all(results.map(exchange => {
+    //         return bundleVolume(exchange, limit)
+    //     }))
+        
+    // }).then(list => {
+    //     data.data = list;
+    //     return exchangeDb.queryCount()
+    // }).then(count => {
+    //     data.total = count[0]['count(*)'];
+    //     data.code = status.OK;
+    //     res.json(data);
+    // }).catch(err => {
+    //     throw err;
+    // });
 }
 
 /**
@@ -57,27 +67,21 @@ function list(req, res, next) {
  * @param {*} exchange 
  * @param {*} limit 
  */
-function bundleVolume(exchange,limit) {
-    return new Promise((resolve, reject) => {
-        exchangeDb.queryVolume(exchange.nick, limit).then(res => {
-            let volume = util.convert(res);
-            exchange.volume = volume;
-            resolve(exchange);
-        }).catch(err => {
-            reject(err);
-        })
-    })
-}
+// function bundleVolume(exchange,limit) {
+//     return new Promise((resolve, reject) => {
+//         exchangeDb.queryVolume(exchange.nick, limit).then(res => {
+//             let volume = util.convert(res);
+//             exchange.volume = volume;
+//             resolve(exchange);
+//         }).catch(err => {
+//             reject(err);
+//         })
+//     })
+// }
 
 function load(req, res, next, name) {
-    let limit = req.query.limit;
-    exchangeDb.queryVolume(name, limit).then(results => {
-        req.results = util.convert(results);
-        return next();
-    }).catch(err => {
-        throw err;
-    });
-
+    req.name = name
+    return next();
 }
 
 /**
@@ -85,10 +89,20 @@ function load(req, res, next, name) {
  * @apiName GetExchangeInfo
  * @apiGroup exchange
  * @apiParam {string} :name Name of exchange
+ * @apiParam {number} res.query.limit Limit of sql query volume
  * @apiSuccess {json} Json of exchange info
  */
-function get(req, res) {
-    return res.json(req.results);
+function getinfo(req, res) {
+    let limit = req.query.limit;
+    exchangeDb.queryVolume(req.ame, limit).then(results => {
+        return res.json(util.convertArray(results));
+    }).catch(err => {
+        throw err;
+    });
 }
 
-module.exports = { basic, list, load, get };
+function getvolume(req, res) {
+
+}
+
+module.exports = { basic, list, load, getinfo, getvolume };

@@ -2,7 +2,7 @@ const db = require('../../config/mysql');
 
 function queryList(start, size) {
     return new Promise((resolve, reject) => {
-        db.query('select * from exchangeinfo where alive=True order by `rank` limit ' + start + ',' + size, function (err, results, fields) {
+        db.query('select * from exchangeinfo join exchangeVolume on (exchangeinfo.nick=exchangevolume.name) where alive=True order by `rank` limit ' + start + ',' + size, function (err, results, fields) {
             if (err)
                 return reject(err);
             resolve(results);
@@ -24,7 +24,7 @@ function queryCount() {
 
 function queryVolume(name, limit) {
     return new Promise((resolve, reject) => {
-        db.query("select volume from exchange where exchange.name = '" + name + "' order by `timestamp` DESC limit " + limit, function (err, results, fields) {
+        db.query("select timestamp,volume from exchange where exchange.name = '" + name + "' order by `timestamp` DESC limit " + limit, function (err, results, fields) {
             if (err) reject(err);
             resolve(results);
         })
