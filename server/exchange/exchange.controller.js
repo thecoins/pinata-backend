@@ -1,5 +1,5 @@
 const util = require('../util');
-const db = require('../../config/mysql');
+// const db = require('../../config/mysql');
 const exchangeDb = require('./exchange.db');
 const status = require('http-status');
 
@@ -11,15 +11,15 @@ const status = require('http-status');
  * @apiParam {number} res.query.count Count of exchanges
  * @apiSuccess {json} Array of Exchanges info
  */
-function basic(req, res, next) {
-    let start = req.query.start;
-    let count = req.query.count;
-    exchangeDb.queryList(start, count).then(results => {        
-        res.json(results)
-    }).catch(err => {
-        throw err;
-    });
-}
+// function basic(req, res, next) {
+//     let start = req.query.start;
+//     let count = req.query.count;
+//     exchangeDb.queryList(start, count).then(results => {        
+//         res.json(results)
+//     }).catch(err => {
+//         throw err;
+//     });
+// }
 
 /**
  * @api {get} /api/exchange/ Request exchange info whth trend
@@ -33,7 +33,7 @@ function basic(req, res, next) {
 function list(req, res, next) {
     let start = req.query.start;
     let size = req.query.size;
-    let limit = req.query.limit;
+    // let limit = req.query.limit;
     let data = {};
     exchangeDb.queryList(start,size).then(resulsts => {
       data.data = resulsts;
@@ -79,9 +79,22 @@ function list(req, res, next) {
 //     })
 // }
 
-function load(req, res, next, name) {
-    req.name = name
-    return next();
+function load(req, res, next,name) {
+    let data = {}
+    exchangeDb.queryInfo(name).then(info => {
+        data.info = info;
+        return exchangeDb.queryVolume(name)
+    }).then(volume => {
+        data.volume = util.convert(volume);
+        data.code = status.OK;
+        req.results = data;
+        return next();
+    }).catch(err =>{
+        console.log(err);
+    })
+
+    
+
 }
 
 /**
@@ -92,17 +105,10 @@ function load(req, res, next, name) {
  * @apiParam {number} res.query.limit Limit of sql query volume
  * @apiSuccess {json} Json of exchange info
  */
-function getinfo(req, res) {
-    let limit = req.query.limit;
-    exchangeDb.queryVolume(req.ame, limit).then(results => {
-        return res.json(util.convertArray(results));
-    }).catch(err => {
-        throw err;
-    });
+function get(req, res) {
+    return res.json(req.results);
 }
 
-function getvolume(req, res) {
 
-}
 
-module.exports = { basic, list, load, getinfo, getvolume };
+module.exports = { list, load, get };

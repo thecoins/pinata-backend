@@ -22,13 +22,22 @@ function queryCount() {
 
 }
 
-function queryVolume(name, limit) {
+function queryVolume(name) {
     return new Promise((resolve, reject) => {
-        db.query("select timestamp,volume from exchange where exchange.name = '" + name + "' order by `timestamp` DESC limit " + limit, function (err, results, fields) {
+        db.query("select volume from exchange where exchange.name = '" + name + "' order by `timestamp` DESC", function (err, results, fields) {
             if (err) reject(err);
             resolve(results);
         })
     })
 
 }
-module.exports = { queryList, queryCount, queryVolume };
+
+function queryInfo(name) {
+    return new Promise((resolve, reject) => {
+        db.query("select * from exchangeinfo where exchangeinfo.nick = '" + name + "' order by `timestamp` DESC", function (err, results, fields) {
+            if (err) reject(err);
+            resolve(results);
+        })
+    })
+}
+module.exports = { queryList, queryCount, queryInfo, queryVolume };
