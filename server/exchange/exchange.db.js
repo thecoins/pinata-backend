@@ -24,7 +24,7 @@ function queryCount() {
 
 function queryVolume(name) {
     return new Promise((resolve, reject) => {
-        db.query("select volume from exchange where exchange.name = '" + name + "' order by `timestamp` DESC", function (err, results, fields) {
+        db.query("select timestamp,volume from exchange where exchange.name = '" + name + "' order by `timestamp` DESC", function (err, results, fields) {
             if (err) reject(err);
             resolve(results);
         })

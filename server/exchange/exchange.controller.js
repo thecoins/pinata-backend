@@ -85,7 +85,7 @@ function load(req, res, next,name) {
         data.info = info;
         return exchangeDb.queryVolume(name)
     }).then(volume => {
-        data.volume = util.convert(volume);
+        data.volume = util.convertArray(volume);
         data.code = status.OK;
         req.results = data;
         return next();
